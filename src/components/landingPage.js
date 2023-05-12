@@ -1,19 +1,73 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Puff } from 'react-loader-spinner';
 
-function LandingPage() {
+const MovieCard = ({ movie }) => (
+    <div className="max-w-sm rounded overflow-hidden shadow-lg m-4">
+        <img className="w-full" src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
+    <div className="px-6 py-4">
+      <div className="font-bold text-xl mb-2">{movie.title}</div>
+      <p className="text-gray-700 text-base">{movie.overview}</p>
+    </div>
+    <div className="px-6 pt-4 pb-2">
+      {movie.genre_ids.map(genre => (
+        <span key={genre} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#{genre}</span>
+      ))}
+    </div>
+  </div>
+);
+
+const LandingPage = () => {
+    const [movies, setMovies] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchMovies = async () => {
+            try {
+                const response = await axios.get(
+                    `https://api.themoviedb.org/3/discover/movie?api_key=7be72508776961f3948639fbd796bccd`
+                );
+                setMovies(response.data.results);
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchMovies();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <Puff color="#00BFFF" height={100} width={100} />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <h2>Error: {error}</h2>
+            </div>
+        );
+    }
+
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-900">
-            <h1 className="text-4xl md:text-6xl text-center font-bold mb-4">¡Descubre y disfruta tus películas y series favoritas!</h1>
-            <p className="text-lg md:text-xl mb-8 text-center px-4">Explora y recibe recomendaciones personalizadas de películas y series según tus gustos y preferencias. Regístrate o inicia sesión para comenzar a disfrutar.</p>
-            <div className="mb-8">
-                <img src="./Assets//maxresdefault-5-1024x576.jpg" alt="Películas y series" className="rounded-md shadow-lg" />
+        <>
+            <header className="text-center mt-10">
+                <h1 className="text-4xl font-bold mb-4">¡Descubre y disfruta tus películas y series favoritas!</h1>
+                <p className="text-lg mb-6">Explora y recibe recomendaciones personalizadas de películas y series según tus gustos y preferencias.</p>
+            </header>
+            <div className="flex flex-wrap justify-center">
+                {movies.map((movie) => (
+                    <MovieCard movie={movie} key={movie.id} />
+                ))}
             </div>
-            <div>
-                <a href="/registro" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4">Regístrate</a>
-                <a href="/login" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Iniciar sesión</a>
-            </div>
-        </div>
+        </>
     );
-}
+};
 
 export default LandingPage;
