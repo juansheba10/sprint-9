@@ -9,7 +9,7 @@ import SignUp from './signUp';
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<SignUp />} />  // Página de registro
-    <Route path="/home" element={<LandingPage />} />  // Página principal
+    <Route path="/landingPage" element={<LandingPage />} />  // Página principal
     {/* Agrega tus otras rutas aquí */}
   </Routes>
 );
