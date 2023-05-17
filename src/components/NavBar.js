@@ -1,8 +1,21 @@
 import React, { useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
+import { signOut } from 'firebase/auth'; // Importa la función signOut desde firebase/auth
+import auth from '../Firebase/script'
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { currentUser } = useAuth()
 
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate('/signIn');
+    } catch (error) {
+      console.log('Error al hacer logout:', error);
+    }
+  };
   return (
     <nav className="flex items-center justify-between flex-wrap bg-teal-500 p-6">
       <div className="flex items-center flex-shrink-0 text-white mr-6">
@@ -21,9 +34,15 @@ const NavBar = () => {
           <a href="#responsive-header" className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
             TV Shows
           </a>
-          <a href="#responsive-header" className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white">
-            Contact
-          </a>
+          {currentUser ? (
+            <button onClick={handleLogout} className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+              Logout
+            </button>
+          ) : (
+            <Link to="/signUp" className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+              Sign Up
+            </Link>
+          )}
         </div>
       </div>
     </nav>

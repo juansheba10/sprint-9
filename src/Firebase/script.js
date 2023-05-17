@@ -14,9 +14,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);  // Inicializa Firebase Auth
 const analytics = getAnalytics(app);
 
-export {auth}
-
-// Ahora puedes usar `auth` para manejar la autenticación
+export const auth = getAuth(app);  // Inicializa Firebase Auth
