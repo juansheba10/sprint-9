@@ -16,7 +16,7 @@ const SignUp = () => {
     createUserWithEmailAndPassword(auth, email, password)  // Usa la instancia de auth que has importado
       .then((userCredential) => {
           const user = userCredential.user;
-          navigate('/landingPage')
+          navigate('/')
       })
       .catch((error) => {
         const errorCode = error.code;

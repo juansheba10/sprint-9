@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth'; // Importa la función signOut desde firebase/auth
-import auth from '../Firebase/script'
+import { auth } from '../Firebase/script'
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { currentUser } = useAuth()
+  const currentUser = auth.currentUser;
+  const navigate = useNavigate();
+
 
 
   const handleLogout = async () => {
