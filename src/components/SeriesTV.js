@@ -7,7 +7,7 @@ import {useAuth } from './AuthContext';
 
 const MovieCard = ({ movie }) => {
   const { currentUser } = useAuth()
-  const linkPath = currentUser ? `/movie/${movie.id}` : '/signIn';
+  const linkPath = currentUser ? `/tv/${movie.id}` : '/signIn';
 
   return (
     <Link to={linkPath} className="max-w-sm rounded overflow-hidden shadow-lg m-4">
@@ -25,27 +25,29 @@ const MovieCard = ({ movie }) => {
   );
 };
 
-const LandingPage = () => {
+const SeriesTv = () => {
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchMovies = async () => {
-            try {
-                const response = await axios.get(
-                    `https://api.themoviedb.org/3/discover/movie?api_key=7be72508776961f3948639fbd796bccd`
-                );
-                setMovies(response.data.results);
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
+          try {
+            const response = await axios.get(
+              `https://api.themoviedb.org/3/discover/tv?api_key=7be72508776961f3948639fbd796bccd&sort_by=vote_average.desc`
+            );
+            setMovies(response.data.results);
+          } catch (error) {
+            setError(error.message);
+          } finally {
+            setLoading(false);
+          }
         };
-
+      
         fetchMovies();
-    }, []);
+      }, []);
+      
+      
 
     if (loading) {
         return (
@@ -78,4 +80,4 @@ const LandingPage = () => {
     );
 };
 
-export default LandingPage;
+export default SeriesTv;

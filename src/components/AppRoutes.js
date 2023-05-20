@@ -7,16 +7,24 @@ import SignUp from './signUp';
 import MovieDetails from './MovieDetails';
 import SignIn from './signIn';
 import ProtectedRoute from './ProtectedRoute';
+import SeriesTv from './SeriesTV';
+import SeriesDetails from './SeriesDetails';
 // Importa tus otros componentes aquí
 
 const AppRoutes = () => (
   <Routes>
-     <Route path="/" element={<LandingPage />} />
+    <Route path="/" element={<LandingPage />} />
+    <Route path='/Series' element={<SeriesTv/> } />
     <Route path="/signUp" element={<SignUp />} />
     <Route path="/signIn" element={<SignIn />} />
      <Route path="/movie/:id" element={
       <ProtectedRoute>
         <MovieDetails />
+      </ProtectedRoute>
+    } />
+    <Route path="/tv/:id" element={
+      <ProtectedRoute>
+        <SeriesDetails />
       </ProtectedRoute>
     }/>
   </Routes>

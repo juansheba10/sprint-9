@@ -8,8 +8,6 @@ const NavBar = () => {
   const currentUser = auth.currentUser;
   const navigate = useNavigate();
 
-
-
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -18,6 +16,7 @@ const NavBar = () => {
       console.log('Error al hacer logout:', error);
     }
   };
+
   return (
     <nav className="flex items-center justify-between flex-wrap bg-teal-500 p-6">
       <div className="flex items-center flex-shrink-0 text-white mr-6">
@@ -30,12 +29,12 @@ const NavBar = () => {
       </div>
       <div className={`${isOpen ? 'block' : 'hidden'} w-full block flex-grow lg:flex lg:items-center lg:w-auto`}>
         <div className="text-sm lg:flex-grow">
-          <a href="#responsive-header" className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+          <Link to="/Movies" className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
             Movies
-          </a>
-          <a href="#responsive-header" className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+          </Link>
+          <Link to="/Series" className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
             TV Shows
-          </a>
+          </Link>
           {currentUser ? (
             <button onClick={handleLogout} className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
               Logout

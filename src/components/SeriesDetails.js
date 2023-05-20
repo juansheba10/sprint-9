@@ -3,14 +3,14 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios'
 import DefaultAvatar from "../components/Assets/3551739.jpg"
 
-const MovieDetails = () => {
+const SeriesDetails = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [expandedReviews, setExpandedReviews] = useState({})
 
   useEffect(() => {
-    axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=7be72508776961f3948639fbd796bccd`)
+    axios.get(`https://api.themoviedb.org/3/tv/${id}?api_key=7be72508776961f3948639fbd796bccd`)
       .then(response => {
         setMovie(response.data);
       })
@@ -18,7 +18,7 @@ const MovieDetails = () => {
         console.error("Error fetching movie details:", error);
       });
 
-    axios.get(`https://api.themoviedb.org/3/movie/${id}/reviews?api_key=7be72508776961f3948639fbd796bccd`)
+    axios.get(`https://api.themoviedb.org/3/tv/${id}/reviews?api_key=7be72508776961f3948639fbd796bccd`)
       .then(response => {
         setReviews(response.data.results);
       })
@@ -45,10 +45,11 @@ const MovieDetails = () => {
     <div className="flex flex-col sm:flex-row mb-4">
       <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} className="w-full sm:w-1/2 sm:mr-4"/>
       <div>
-        <h2 className="text-2xl font-semibold mb-2">{movie.title}</h2>
-        <p className="text-sm text-gray-500 mb-2">{movie.release_date.split('-')[0]} • {movie.runtime} min</p>
-        <p className="text-gray-600">{movie.overview}</p>
-        <p>Rating: {movie.vote_average} ({movie.vote_count} votes)</p>
+      <h2 className="text-2xl font-semibold mb-2">{movie.name}</h2>
+<p className="text-sm text-gray-500 mb-2">
+  {movie.first_air_date ? movie.first_air_date.split('-')[0] : 'Unknown'} • 
+  {movie.episode_run_time && movie.episode_run_time.length > 0 ? movie.episode_run_time[0] : 'Unknown'} min
+</p>
       </div>
     </div>
     <div>
@@ -61,7 +62,7 @@ const MovieDetails = () => {
                 review.author_details.avatar_path && review.author_details.avatar_path.startsWith('/https') 
                   ? review.author_details.avatar_path.replace(/^\//, '')
                   : review.author_details.avatar_path
-                  ? `https://image.tmdb.org/t/p/original${review.author_details.avatar_path}`
+                  ? `https://image.tmdb.org/tv/p/original${review.author_details.avatar_path}`
                   : DefaultAvatar} 
                 alt={review.author} className="w-16 h-16 rounded-full mr-4 shadow" />
               <div>
@@ -84,4 +85,4 @@ const MovieDetails = () => {
   );
 };
 
-export default MovieDetails;
+export default SeriesDetails;
