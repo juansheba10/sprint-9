@@ -6,24 +6,24 @@ import { useAuth } from './AuthContext';
 import SearchBar from './SearchBar';
 
 const MovieCard = ({ movie }) => {
-  const { currentUser } = useAuth()
-  const linkPath = currentUser ? `/movie/${movie.id}` : '/signIn';
-
-  return (
-    <Link to={linkPath} className="max-w-sm rounded overflow-hidden shadow-lg m-4">
-      <img className="w-full" src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
-      <div className="px-6 py-4">
-        <div className="font-bold text-xl mb-2">{movie.title}</div>
-        <p className="text-gray-700 text-base">{movie.overview}</p>
-      </div>
-      <div className="px-6 pt-4 pb-2">
-        {movie.genre_ids.map(genre => (
-          <span key={genre} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#{genre}</span>
-        ))}
-      </div>
-    </Link>
-  );
-};
+    const { currentUser } = useAuth()
+    const linkPath = currentUser ? `/movie/${movie.id}` : '/signIn';
+  
+    return (
+      <Link to={linkPath} className="max-w-sm rounded overflow-hidden shadow-lg m-4 bg-gray-800 text-white">
+        <img className="w-full" src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
+        <div className="px-6 py-4">
+          <div className="font-bold text-xl mb-2">{movie.title}</div>
+          <p className="text-gray-200 text-base">{movie.overview}</p>
+        </div>
+        <div className="px-6 pt-4 pb-2">
+          {movie.genre_ids.map(genre => (
+            <span key={genre} className="inline-block bg-gray-700 rounded-full px-3 py-1 text-sm font-semibold text-gray-200 mr-2 mb-2">#{genre}</span>
+          ))}
+        </div>
+      </Link>
+    );
+  };
 
 const LandingPage = () => {
     const [movies, setMovies] = useState([]);

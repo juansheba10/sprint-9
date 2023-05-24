@@ -2,11 +2,11 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Puff } from 'react-loader-spinner';
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
-import {useAuth } from './AuthContext'; 
+import { useAuth } from './AuthContext';
+import SearchBar from './SearchBar';
 
 const MovieCard = ({ movie }) => {
-  const { currentUser } = useAuth()
+  const { currentUser } = useAuth();
   const linkPath = currentUser ? `/tv/${movie.id}` : '/signIn';
 
   return (
@@ -26,58 +26,60 @@ const MovieCard = ({ movie }) => {
 };
 
 const SeriesTv = () => {
-    const [movies, setMovies] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(""); // Nuevo estado para el término de búsqueda
 
-    useEffect(() => {
-        const fetchMovies = async () => {
-          try {
-            const response = await axios.get(
-              `https://api.themoviedb.org/3/discover/tv?api_key=7be72508776961f3948639fbd796bccd&sort_by=vote_average.desc`
-            );
-            setMovies(response.data.results);
-          } catch (error) {
-            setError(error.message);
-          } finally {
-            setLoading(false);
-          }
-        };
-      
-        fetchMovies();
-      }, []);
-      
-      
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        let url = `https://api.themoviedb.org/3/discover/tv?api_key=7be72508776961f3948639fbd796bccd&sort_by=vote_average.desc`;
+        if (searchTerm) {
+          url = `https://api.themoviedb.org/3/search/tv?api_key=7be72508776961f3948639fbd796bccd&query=${encodeURIComponent(searchTerm)}`;
+        }
+        const response = await axios.get(url);
+        setMovies(response.data.results);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <Puff color="#00BFFF" height={100} width={100} />
-            </div>
-        );
-    }
+    fetchMovies();
+  }, [searchTerm]);
 
-    if (error) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <h2>Error: {error}</h2>
-            </div>
-        );
-    }
-
+  if (loading) {
     return (
-        <div className='bg-gray-00'>
-             <header className="text-center mt-10">
-                <h1 className="text-4xl font-bold mb-4">¡Descubre y disfruta tus películas y series favoritas!</h1>
-                <p className="text-lg mb-6">Explora y recibe recomendaciones personalizadas de películas y series según tus gustos y preferencias.</p>
-            </header>
-            <div className="flex flex-wrap justify-center">
-                {movies.map((movie) => (
-                    <MovieCard movie={movie} key={movie.id} />
-                ))}
-            </div>
-        </div>
+      <div className="flex justify-center items-center h-screen">
+        <Puff color="#00BFFF" height={100} width={100} />
+      </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <h2>Error: {error}</h2>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-gray-00">
+      <header className="text-center mt-10">
+        <h1 className="text-4xl font-bold mb-4">¡Descubre y disfruta tus películas y series favoritas!</h1>
+        <p className="text-lg mb-6">Explora y recibe recomendaciones personalizadas de películas y series según tus gustos y preferencias.</p>
+        <SearchBar onSearch={setSearchTerm} /> {/* Pasar setSearchTerm como prop */}
+      </header>
+      <div className="flex flex-wrap justify-center">
+        {movies.map((movie) => (
+          <MovieCard movie={movie} key={movie.id} />
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default SeriesTv;

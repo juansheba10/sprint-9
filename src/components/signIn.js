@@ -1,4 +1,4 @@
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../Firebase/script.js';
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -9,6 +9,7 @@ const SignIn = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const provider = new GoogleAuthProvider();
 
     const signInWithEmailAndPasswordHandler = (event, email, password) => {
         event.preventDefault();
@@ -16,6 +17,20 @@ const SignIn = () => {
             .then((userCredential) => {
                 const user = userCredential.user;
                 navigate('/')
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                setError(errorMessage);
+            });
+    };
+
+    const signInWithGoogleHandler = (event) => {
+        event.preventDefault();
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                const user = result.user;
+                navigate('/');
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -58,11 +73,11 @@ const SignIn = () => {
                                         </a>
                                     </div>
                                     <div className="w-full md:w-1/2 px-2">
-                                        <a className="inline-flex w-full py-3 px-4 items-center justify-center rounded-full border border-gray-200 hover:border-gray-400 transition duration-100" href="#">
-                                            <img src="saturn-assets/images/sign-up/icon-apple.svg" alt="" />
-                                            <span className="ml-4 text-sm font-semibold text-gray-500">Login with Apple</span>
-                                        </a>
-                                    </div>
+  <a className="inline-flex w-full py-3 px-4 items-center justify-center rounded-full border border-gray-200 hover:border-gray-400 transition duration-100" onClick={signInWithGoogleHandler}>
+    <img src="saturn-assets/images/sign-up/icon-google.svg" alt="" />
+    <span className="ml-4 text-sm font-semibold text-gray-500">Login with Google</span>
+  </a>
+</div>
                                 </div>
                                 <div className="flex mb-6 items-center">
                                     <div className="w-full h-px bg-gray-300"></div>
