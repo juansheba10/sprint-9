@@ -2,17 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios'
 import DefaultAvatar from "../components/Assets/3551739.jpg"
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+
 
 const MovieDetails = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [expandedReviews, setExpandedReviews] = useState({})
+  const [cast, setCast] = useState([]);
 
   useEffect(() => {
     axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=7be72508776961f3948639fbd796bccd`)
       .then(response => {
         setMovie(response.data);
+        console.log(response.data)
       })
       .catch(error => {
         console.error("Error fetching movie details:", error);
@@ -24,6 +29,13 @@ const MovieDetails = () => {
       })
       .catch(error => {
         console.error("Error fetching movie reviews:", error);
+      });
+     axios.get(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=7be72508776961f3948639fbd796bccd`)
+      .then(response => {
+        setCast(response.data.cast);
+      })
+      .catch(error => {
+        console.error("Error fetching movie cast:", error);
       });
   }, [id]);
 
@@ -47,10 +59,49 @@ const MovieDetails = () => {
       <div>
         <h2 className="text-2xl font-semibold mb-2">{movie.title}</h2>
         <p className="text-sm text-gray-500 mb-2">{movie.release_date.split('-')[0]} • {movie.runtime} min</p>
-        <p className="text-gray-600">{movie.overview}</p>
-        <p>Rating: {movie.vote_average} ({movie.vote_count} votes)</p>
+          <p className="text-gray-600">{movie.overview}</p>
+          <p>Rating: 
+          <div style={{ width: "100px", height: "100px" }}>
+  <CircularProgressbar
+    value={movie.vote_average * 10}
+    text={`${movie.vote_average * 10}%`}
+    styles={buildStyles({
+      // Ruta de color de la barra de progreso
+      pathColor: `rgba(62, 152, 199, ${movie.vote_average / 10})`,
+      // Color del texto
+      textColor: '#f88',
+      // Color de la ruta restante
+      trailColor: '#d6d6d6',
+      // Si deseas que el fondo sea transparente
+      backgroundColor: '#3e98c7',
+    })}
+  />
+</div>
+
+
+ ({movie.vote_count} votes)</p>
+       <div>
+            <h3 className="text-xl font-semibold mb-2">Cast:</h3>
+            <div className="flex flex-wrap -m-2">
+              {cast.slice(0, 5).map((actor, index) => (
+                <div key={index} className="w-full sm:w-1/3 p-2">
+                  <div className="bg-gray-200 p-4 rounded shadow-lg flex items-start">
+                    <img src={
+                      actor.profile_path 
+                        ? `https://image.tmdb.org/t/p/w500${actor.profile_path}`
+                        : DefaultAvatar} 
+                      alt={actor.name} className="w-24 h-24 rounded-3xl mr-4 shadow" />
+                    <div>
+                      <div className="font-bold text-lg mb-2 text-gray-900 border-b">{actor.name}</div>
+                      <p className="text-gray-700 leading-relaxed">{actor.character}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
     <div>
       <h3 className="text-xl font-semibold mb-2">Reviews:</h3>
       <div className="flex flex-wrap -m-2">
@@ -77,8 +128,7 @@ const MovieDetails = () => {
           </div>
         ))}
       </div>
-    </div>
-    {/* Más detalles de la película aquí */}
+      </div>
   </div>
   
   );

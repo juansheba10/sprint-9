@@ -68,13 +68,13 @@ const SignIn = () => {
                                 <div className="flex flex-wrap mb-6 items-center -mx-2">
                                     <div className="w-full md:w-1/2 px-2 mb-3 md:mb-0">
                                         <a className="inline-flex w-full py-3 px-4 items-center justify-center rounded-full border border-gray-200 hover:border-gray-400 transition duration-100" href="#">
-                                            <img src="saturn-assets/images/sign-up/icon-facebook.svg" alt="" />
+                                            <img src="https://t3.ftcdn.net/jpg/05/76/45/34/240_F_576453412_gpEvEvJWPQuy0cTXsgFXreZczKncZGFF.jpg" className='w-1/5' alt="" />
                                             <span className="ml-4 text-sm font-semibold text-gray-500">Login with Facebook</span>
                                         </a>
                                     </div>
                                     <div className="w-full md:w-1/2 px-2">
   <a className="inline-flex w-full py-3 px-4 items-center justify-center rounded-full border border-gray-200 hover:border-gray-400 transition duration-100" onClick={signInWithGoogleHandler}>
-    <img src="saturn-assets/images/sign-up/icon-google.svg" alt="" />
+    <img src="https://cdn-icons-png.flaticon.com/128/2991/2991148.png" className='w-1/5' alt="" />
     <span className="ml-4 text-sm font-semibold text-gray-500">Login with Google</span>
   </a>
 </div>
