@@ -10,7 +10,7 @@ import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-    const [error, setError] = useState(null);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const provider = new GoogleAuthProvider();
 
@@ -25,7 +25,7 @@ const SignUp = () => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        setError(errorMessage);
+        setError(errorMessage + errorCode);
       });
   };
   const signInWithGoogleHandler = (event) => {
@@ -38,7 +38,7 @@ const SignUp = () => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        setError(errorMessage);
+        setError(errorMessage + errorCode);
       });
   };
   
@@ -71,16 +71,16 @@ const SignUp = () => {
             <p className="text-lg text-gray-500 mb-10">Greetings on your return! We kindly request you to enter your details.</p>
             <div className="flex flex-wrap mb-6 items-center -mx-2">
               <div className="w-full md:w-1/2 px-2 mb-3 md:mb-0">
-                <a className="inline-flex w-full py-3 px-4 items-center justify-center rounded-full border border-gray-200 hover:border-gray-400 transition duration-100" href="#">
+                <button className="inline-flex w-full py-3 px-4 items-center justify-center rounded-full border border-gray-200 hover:border-gray-400 transition duration-100" href="#">
                   <img src="saturn-assets/images/sign-up/icon-facebook.svg" alt="" />
                   <span className="ml-4 text-sm font-semibold text-gray-500">Login with Facebook</span>
-                </a>
+                </button>
               </div>
               <div className="w-full md:w-1/2 px-2">
-  <a className="inline-flex w-full py-3 px-4 items-center justify-center rounded-full border border-gray-200 hover:border-gray-400 transition duration-100" onClick={signInWithGoogleHandler}>
+  <button className="inline-flex w-full py-3 px-4 items-center justify-center rounded-full border border-gray-200 hover:border-gray-400 transition duration-100" onClick={signInWithGoogleHandler}>
     <img src="saturn-assets/images/sign-up/icon-google.svg" alt="" />
     <span className="ml-4 text-sm font-semibold text-gray-500">Login with Google</span>
-  </a>
+  </button>
 </div>
 
             </div>
@@ -97,7 +97,7 @@ const SignUp = () => {
               <div className="mb-7">
                 <div className="flex mb-1.5 items-center justify-between">
                   <label className="block text-sm text-gray-900 font-semibold" htmlFor="">Password</label>
-                  <a className="inline-block text-xs font-semibold text-orange-900 hover:text-gray-900" href="#">Forget password?</a>
+                  <button className="inline-block text-xs font-semibold text-orange-900 hover:text-gray-900" href="#">Forget password?</button>
                 </div>
                 <div className="relative">
                   <input className="w-full py-3 px-4 text-sm text-gray-900 placeholder-gray-400 border border-gray-200 focus:border-purple-500 focus:outline-purple rounded-lg" type="password" name="userPassword" onChange={event => setPassword(event.target.value)}  placeholder="Enter your password" />

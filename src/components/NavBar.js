@@ -36,14 +36,20 @@ const NavBar = () => {
             TV Shows
           </Link>
           {currentUser ? (
-            <button onClick={handleLogout} className="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4">
-              Logout
-            </button>
+            <>
+              <Link to="/Profile" className="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4">
+                Profile
+              </Link>
+              <button onClick={handleLogout} className="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4">
+                Logout
+              </button>
+            </>
           ) : (
             <Link to="/signUp" className="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4">
               Sign Up
             </Link>
           )}
+          
         </div>
       </div>
     </nav>

@@ -9,7 +9,7 @@ import SignIn from './signIn';
 import ProtectedRoute from './ProtectedRoute';
 import SeriesTv from './SeriesTV';
 import SeriesDetails from './SeriesDetails';
-// Importa tus otros componentes aquí
+import CreateProfile from './Profile';
 
 const AppRoutes = () => (
   <Routes>
@@ -26,7 +26,13 @@ const AppRoutes = () => (
       <ProtectedRoute>
         <SeriesDetails />
       </ProtectedRoute>
-    }/>
+    } />
+    <Route path='/profile' element={
+      <ProtectedRoute>
+        <CreateProfile />
+      </ProtectedRoute>
+    }
+    />
   </Routes>
 );
 

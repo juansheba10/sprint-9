@@ -21,7 +21,7 @@ const SignIn = () => {
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                setError(errorMessage);
+                setError(errorMessage + errorCode);
             });
     };
 
@@ -35,7 +35,7 @@ const SignIn = () => {
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                setError(errorMessage);
+                setError(errorMessage + errorCode);
             });
     };
     
@@ -67,16 +67,16 @@ const SignIn = () => {
                                 <p className="text-lg text-gray-500 mb-10">Welcome back! Please enter your details to sign in.</p>
                                 <div className="flex flex-wrap mb-6 items-center -mx-2">
                                     <div className="w-full md:w-1/2 px-2 mb-3 md:mb-0">
-                                        <a className="inline-flex w-full py-3 px-4 items-center justify-center rounded-full border border-gray-200 hover:border-gray-400 transition duration-100" href="#">
+                                        <button className="inline-flex w-full py-3 px-4 items-center justify-center rounded-full border border-gray-200 hover:border-gray-400 transition duration-100" href="">
                                             <img src="https://t3.ftcdn.net/jpg/05/76/45/34/240_F_576453412_gpEvEvJWPQuy0cTXsgFXreZczKncZGFF.jpg" className='w-1/5' alt="" />
                                             <span className="ml-4 text-sm font-semibold text-gray-500">Login with Facebook</span>
-                                        </a>
+                                        </button>
                                     </div>
                                     <div className="w-full md:w-1/2 px-2">
-  <a className="inline-flex w-full py-3 px-4 items-center justify-center rounded-full border border-gray-200 hover:border-gray-400 transition duration-100" onClick={signInWithGoogleHandler}>
+  <button className="inline-flex w-full py-3 px-4 items-center justify-center rounded-full border border-gray-200 hover:border-gray-400 transition duration-100" onClick={signInWithGoogleHandler}>
     <img src="https://cdn-icons-png.flaticon.com/128/2991/2991148.png" className='w-1/5' alt="" />
     <span className="ml-4 text-sm font-semibold text-gray-500">Login with Google</span>
-  </a>
+  </button>
 </div>
                                 </div>
                                 <div className="flex mb-6 items-center">
@@ -92,7 +92,7 @@ const SignIn = () => {
                                     <div className="mb-7">
                                         <div className="flex mb-1.5 items-center justify-between">
                                             <label className="block text-sm text-gray-900 font-semibold" htmlFor="userPassword">Password</label>
-                                            <a className="inline-block text-xs font-semibold text-orange-900 hover:text-gray-900" href="#">Forget password?</a>
+                                            <button className="inline-block text-xs font-semibold text-orange-900 hover:text-gray-900" href="#">Forget password?</button>
                                         </div>
                                         <div className="relative">
                                             <input className="w-full py-3 px-4 text-sm text-gray-900 placeholder-gray-400 border border-gray-200 focus:border-purple-500 focus:outline-purple rounded-lg" type="password" id="userPassword" onChange={event => setPassword(event.target.value)} placeholder="Enter your password" />
