@@ -4,6 +4,13 @@ import axios from 'axios'
 import DefaultAvatar from "../components/Assets/3551739.jpg"
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { db } from '../Firebase/script';
+import { deleteDoc, doc, query, collection, where, getDocs, addDoc } from 'firebase/firestore';
+import { getAuth } from "firebase/auth";
+import { Puff } from 'react-loader-spinner';
+
+
+
 
 const MovieDetails = () => {
   const { id } = useParams();
@@ -11,6 +18,12 @@ const MovieDetails = () => {
   const [reviews, setReviews] = useState([]);
   const [expandedReviews, setExpandedReviews] = useState({})
   const [cast, setCast] = useState([]);
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const [isInWishlist, setIsInWishlist] = useState(false);
+  const [isInWatchedlist, setIsInWatchedlist] = useState(false)
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=7be72508776961f3948639fbd796bccd`)
@@ -41,6 +54,34 @@ const MovieDetails = () => {
       });
   }, [id]);
 
+  const checkWishlist = async () => {
+    const userId = user.uid;
+    const wishlistQuery = query(collection(db, 'wishlist'), where('userId', '==', userId), where('movieId', '==', id));
+    const wishlistDocs = await getDocs(wishlistQuery);
+
+    if (wishlistDocs.empty) {
+      setIsInWishlist(false);
+    } else {
+      setIsInWishlist(true);
+    }
+    setLoading(false);
+  }
+
+  // Comprobación inicial para la lista de películas vistas
+  const checkWatchedlist = async () => {
+    const userId = user.uid;
+    const watchedlistQuery = query(collection(db, 'watchedlist'), where('userId', '==', userId), where('movieId', '==', id));
+    const watchedlistDocs = await getDocs(watchedlistQuery);
+
+    if (watchedlistDocs.empty) {
+      setIsInWatchedlist(false);
+    } else {
+      setIsInWatchedlist(true);
+    }
+    setLoading(false);
+  }
+
+
   const handleExpandClick = (index) => {
     setExpandedReviews({
       ...expandedReviews,
@@ -48,9 +89,72 @@ const MovieDetails = () => {
     });
   };
 
+  useEffect(() => {
+    checkWishlist();
+    checkWatchedlist();
+  }, [id, user]);
+ 
+  const addToWishlist = async () => {
+    const userId = user.uid;
+  
+    if (isInWishlist) {
+      const wishlistQuery = query(collection(db, 'wishlist'), where('userId', '==', userId), where('movieId', '==', id));
+      const wishlistDocs = await getDocs(wishlistQuery);
+      const docRef = doc(db, 'wishlist', wishlistDocs.docs[0].id);
+      await deleteDoc(docRef);
+      setIsInWishlist(false);
+    } else {
+      try {
+        const docRef = await addDoc(collection(db, 'wishlist'), {
+          userId: userId,
+          movieId: id,
+          movieTitle: movie.title,
+          moviePoster: movie.poster_path,
+        });
+        console.log("Document written with ID: ", docRef.id);
+        setIsInWishlist(true);
+      } catch (error) {
+        console.error("Error adding document: ", error);
+      }
+    }
+  };
+  
+  const watchedWishlist = async () => {
+    const userId = user.uid;
+  
+    if (isInWatchedlist) {
+      const watchedlistQuery = query(collection(db, 'watchedlist'), where('userId', '==', userId), where('movieId', '==', id));
+      const watchedlistDocs = await getDocs(watchedlistQuery);
+      const docRef = doc(db, 'watchedlist', watchedlistDocs.docs[0].id);
+      await deleteDoc(docRef);
+      setIsInWatchedlist(false);
+    } else {
+      try {
+        const docRef = await addDoc(collection(db, 'watchedlist'), {
+          userId: userId,
+          movieId: id,
+          movieTitle: movie.title,
+          moviePoster: movie.poster_path,
+        });
+        console.log("Document written with ID: ", docRef.id);
+        setIsInWatchedlist(true);
+      } catch (error) {
+        console.error("Error adding document: ", error);
+      }
+    }
+  };
+
+  
 
   if (!movie) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    if (!movie) {
+      return (
+        <div className="flex justify-center items-center h-screen">
+          <Puff color="#00BFFF" height={100} width={100} />
+        </div>
+      )
+    }
+    
   }
 
   return (
@@ -62,25 +166,45 @@ const MovieDetails = () => {
           <h2 className="text-2xl font-semibold mb-2">{movie.title}</h2>
           <p className="text-sm text-gray-500 mb-2">{movie.release_date.split('-')[0]} • {movie.runtime} min</p>
           <p className="text-gray-600">{movie.overview}</p>
-          <div>
-            
-            <p>Rating:</p>
-            <div style={{ width: "100px", height: "100px" }}>
-              {console.log(`Vote average before CircularProgressbar: ${movie.vote_average}`)}
-              <CircularProgressbar 
-  value={movie.vote_average * 10} 
-  text={`${movie.vote_average * 10}%`} 
-  styles={buildStyles({
-    textSize: '16px',
-    pathColor: `rgba(62, 152, 199, ${Math.min(movie.vote_average / 10, 1)})`,
-    textColor: '#f88',
-    trailColor: '#d6d6d6',
-  })}
-/>
-
-            </div>
-            <p>({movie.vote_count} votes)</p>
-          </div>
+          <div className="my-4">
+  <p className="text-lg font-bold">Rating:</p>
+  <div className="flex items-center justify-start">
+    <div style={{ width: "100px", height: "100px", marginRight: "10px" }}>
+      <CircularProgressbar 
+        value={movie.vote_average * 10} 
+        text={`${movie.vote_average * 10}%`} 
+        styles={buildStyles({
+          textSize: '16px',
+          pathColor: `rgba(62, 152, 199, ${Math.min(movie.vote_average / 10, 1)})`,
+          textColor: '#f88',
+          trailColor: '#d6d6d6',
+        })}
+      />
+    </div>
+    <div>
+      <p className="text-lg font-semibold">{movie.vote_average} / 10</p>
+      <p className="text-sm text-gray-500">({movie.vote_count} votes)</p>
+    </div>
+  </div>
+</div>
+{loading ? (
+  <Puff color="#00BFFF" height={100} width={100} />  // Este es un ejemplo de un indicador de carga. Reemplázalo por el que estés usando.
+) : (
+  <>
+    <button 
+      className={`font-bold py-2 px-4 rounded ${isInWishlist ? "bg-blue-700" : "bg-blue-500 hover:bg-blue-700"} text-white`}
+      onClick={addToWishlist}
+    >
+      {isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
+    </button>
+    <button 
+      className={`font-bold py-2 px-4 rounded ${isInWatchedlist ? "bg-green-700" : "bg-green-500 hover:bg-green-700"} text-white`}
+      onClick={watchedWishlist}
+    >
+      {isInWatchedlist ? "Remove from watchedlist" : "Add to watchedlist"}
+    </button>
+  </>
+)}
           <div>
             <h3 className="text-xl font-semibold mb-2">Cast:</h3>
             <div className="flex flex-wrap -m-2">

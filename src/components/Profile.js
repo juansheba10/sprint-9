@@ -3,6 +3,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db, storage } from '../Firebase/script';
 import { updateProfile } from 'firebase/auth'; 
 import { doc, setDoc, getDoc, getFirestore, updateDoc } from 'firebase/firestore';
+import { Puff } from 'react-loader-spinner';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import axios from 'axios';
 
@@ -19,6 +20,8 @@ function CreateProfile() {
   const [newSearch, setNewSearch] = useState('');
   const [newSearchResults, setNewSearchResults] = useState([]);
   const [newFavoriteMovie, setNewFavoriteMovie] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   
 
 
@@ -124,6 +127,7 @@ function CreateProfile() {
           setProfileCreated(true);
         }
       }
+      setLoading(false); // Agregar esta línea
     });
 
     // Limpia la suscripción cuando el componente se desmonta
@@ -174,7 +178,11 @@ function CreateProfile() {
     setIsEditing(false);
   }
   
-  return isEditing ? (
+  return loading ? (
+    <div className="flex justify-center items-center h-screen">
+      <Puff color="#00BFFF" height={100} width={100} />
+    </div>
+  ) : isEditing ? (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-6 sm:px-6 lg:px-8">
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">

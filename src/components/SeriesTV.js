@@ -11,9 +11,9 @@ const MovieCard = ({ movie }) => {
 
   return (
     <Link to={linkPath} className="max-w-sm rounded overflow-hidden shadow-lg m-4">
-      <img className="w-full" src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
+      <img className="w-full" src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.name} />
       <div className="px-6 py-4">
-        <div className="font-bold text-xl mb-2">{movie.title}</div>
+        <div className="font-bold text-xl mb-2">{movie.name}</div>
         <p className="text-gray-700 text-base">{movie.overview}</p>
       </div>
       <div className="px-6 pt-4 pb-2">
@@ -24,6 +24,7 @@ const MovieCard = ({ movie }) => {
     </Link>
   );
 };
+
 
 const SeriesTv = () => {
   const [movies, setMovies] = useState([]);
@@ -39,7 +40,17 @@ const SeriesTv = () => {
           url = `https://api.themoviedb.org/3/search/tv?api_key=7be72508776961f3948639fbd796bccd&query=${encodeURIComponent(searchTerm)}`;
         }
         const response = await axios.get(url);
-        setMovies(response.data.results);
+
+        console.log("API response:", response);
+
+        // Filtrar los resultados para eliminar las series que no tengan un póster, título o descripción
+        const completeMovies = response.data.results.filter(movie => 
+          movie.poster_path && movie.name && movie.overview
+        );
+  
+        // Añadir una declaración de depuración para ver las series después de filtrar
+        console.log("Filtered movies:", completeMovies);
+        setMovies(completeMovies);
       } catch (error) {
         setError(error.message);
       } finally {

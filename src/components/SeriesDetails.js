@@ -55,7 +55,7 @@ const SeriesDetails = () => {
 
   return (
     <div className="max-w-full mx-auto p-4 sm:p-8">
-      <Link to="/" className="inline-block mb-4 text-blue-500">Back to series</Link>
+      <Link to="/Series" className="inline-block mb-4 text-blue-500">Back to series</Link>
       <div className="flex flex-col sm:flex-row mb-4">
         <img src={`https://image.tmdb.org/t/p/w500${series.poster_path}`} alt={series.name} className="w-full sm:w-1/2 sm:mr-4" />
         <div>
@@ -65,17 +65,16 @@ const SeriesDetails = () => {
           <div>
             <p>Rating:</p>
             <div style={{ width: "100px", height: "100px" }}>
-<CircularProgressbar 
-  value={series.vote_average * 10} 
-  text={`${series.vote_average * 10}%`} 
-  styles={buildStyles({
-    textSize: '16px',
-    pathColor: `rgba(62, 152, 199, ${Math.min(series.vote_average / 10, 1)})`,
-    textColor: '#f88',
-    trailColor: '#d6d6d6',
-  })}
-/>
-
+              <CircularProgressbar
+                value={series.vote_average * 10} 
+                text={`${series.vote_average * 10}%`}
+                styles={buildStyles({
+                  textSize: '16px',
+                  pathColor: `rgba(62, 152, 199, ${Math.min(series.vote_average / 10, 1)})`,
+                  textColor: '#f88',
+                  trailColor: '#d6d6d6',
+                })}
+              />
             </div>
             <p>({series.vote_count} votes)</p>
           </div>
