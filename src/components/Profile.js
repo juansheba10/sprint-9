@@ -87,10 +87,11 @@ function CreateProfile() {
     const storageRef = ref(storage, `avatars/${auth.currentUser.uid}`);
     const uploadTask = uploadBytesResumable(storageRef, avatar);
 
-    if (!username || !avatarUrl || !favoriteMovie) {
+    if (!username || !avatar || !favoriteMovie) {
       alert('Por favor, completa todos los campos antes de enviar.');
       return;
     }
+    
 
     uploadTask.on('state_changed', 
       (snapshot) => {
@@ -111,6 +112,7 @@ function CreateProfile() {
         const userDocRef = doc(db, 'users', auth.currentUser.uid);
         await setDoc(userDocRef, { avatar: downloadURL, favoriteMovie: favoriteMovie }, { merge: true });
         setProfileCreated(true);
+        window.location.reload();
       }
     );
   }
@@ -178,6 +180,7 @@ function CreateProfile() {
     const userDocRef = doc(db, 'users', auth.currentUser.uid);
     await setDoc(userDocRef, { avatar: downloadURL, favoriteMovie: newFavoriteMovie }, { merge: true });
     setIsEditing(false);
+    window.location.reload();
   }
   
   return loading ? (
