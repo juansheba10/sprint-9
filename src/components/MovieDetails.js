@@ -10,8 +10,6 @@ import { getAuth } from "firebase/auth";
 import { Puff } from 'react-loader-spinner';
 
 
-
-
 const MovieDetails = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
@@ -23,6 +21,8 @@ const MovieDetails = () => {
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [isInWatchedlist, setIsInWatchedlist] = useState(false)
   const [loading, setLoading] = useState(true);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+
 
 
   useEffect(() => {
@@ -80,6 +80,18 @@ const MovieDetails = () => {
     }
     setLoading(false);
   }
+
+  const actorsToShow = 3;  // Cambia este valor según cuántos actores quieres mostrar a la vez.
+
+  const nextActors = () => {
+    setCarouselIndex((prevIndex) => Math.min(prevIndex + actorsToShow, cast.length - actorsToShow));
+  };
+
+  const prevActors = () => {
+    setCarouselIndex((prevIndex) => Math.max(prevIndex - actorsToShow, 0));
+  };
+
+
 
 
   const handleExpandClick = (index) => {
@@ -182,7 +194,7 @@ const MovieDetails = () => {
       />
     </div>
     <div>
-      <p className="text-lg font-semibold">{movie.vote_average} / 10</p>
+      <p className="text-lg font-semibold">{movie.vote_average}</p>
       <p className="text-sm text-gray-500">({movie.vote_count} votes)</p>
     </div>
   </div>
@@ -205,26 +217,40 @@ const MovieDetails = () => {
     </button>
   </>
 )}
-          <div>
-            <h3 className="text-xl font-semibold mb-2">Cast:</h3>
-            <div className="flex flex-wrap -m-2">
-              {cast.slice(0, 5).map((actor, index) => (
-                <div key={index} className="w-full sm:w-1/3 p-2">
-                  <div className="bg-gray-200 p-4 rounded shadow-lg flex items-start">
-                    <img
-                      src={actor.profile_path ? `https://image.tmdb.org/t/p/w500${actor.profile_path}` : DefaultAvatar}
-                      alt={actor.name}
-                      className="w-24 h-24 rounded-3xl mr-4 shadow"
-                    />
-                    <div>
-                      <div className="font-bold text-lg mb-2 text-gray-900 border-b">{actor.name}</div>
-                      <p className="text-gray-700 leading-relaxed">{actor.character}</p>
-                    </div>
-                  </div>
+           <div>
+        <h3 className="text-xl font-semibold mb-2">Cast:</h3>
+        <div className="flex justify-between items-center">
+          <button 
+            onClick={prevActors} 
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            disabled={carouselIndex === 0}
+          >
+            Anterior
+          </button>
+          <div className="flex space-x-4">
+            {cast.length > 0 && cast.slice(carouselIndex, carouselIndex + actorsToShow).map(actor => (
+              <div key={actor.cast_id} className="flex flex-col items-center">
+                <img
+                  src={actor.profile_path ? `https://image.tmdb.org/t/p/w500${actor.profile_path}` : DefaultAvatar}
+                  alt={actor.name}
+                  className="w-24 h-24 rounded-3xl mr-4 shadow"
+                />
+                <div>
+                  <div className="font-bold text-lg mb-2 text-gray-900 border-b">{actor.name}</div>
+                  <p className="text-gray-700 leading-relaxed">{actor.character}</p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
+          <button 
+            onClick={nextActors} 
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            disabled={carouselIndex === cast.length - actorsToShow}
+          >
+            Siguiente
+          </button>
+        </div>
+      </div>
         </div>
       </div>
       <div>
