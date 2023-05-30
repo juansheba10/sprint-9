@@ -41,7 +41,7 @@ function CreateProfile() {
 
   const handleSearchSubmit = async (e) => {
     e.preventDefault();
-    await searchMovies(search);
+    await searchMovies(search, setSearchResults);
   }
 
   const handleNewAvatarChange = (e) => {
