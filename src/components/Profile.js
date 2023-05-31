@@ -229,33 +229,43 @@ function CreateProfile() {
       </div>
     </div>
   ) :   profileCreated ? (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-6 sm:px-6 lg:px-8">
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
-          <h2 className="mb-2 text-center text-4xl font-extrabold text-gray-900">Tu perfil</h2>
-          <div className="mt-6 text-center">
+  <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-6 sm:px-6 lg:px-8">
+    <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
+        <h2 className="mb-2 text-center text-4xl font-extrabold text-gray-900">Tu perfil</h2>
+        <div className="mt-6 text-center">
+          <div className="mb-4">
             <p className="text-2xl font-semibold">Nombre de usuario: {username}</p>
-            <div className="mt-4">
-              <p className="text-xl font-semibold">Avatar:</p>
-              <img src={avatarUrl} alt="Avatar" className="w-24 h-24 rounded-full mx-auto border-2 border-indigo-500"/>
-            </div>
-            
-            {favoriteMovie && (
-            <div className="mt-4">
+          </div>
+          <div className="mb-4">
+            <p className="text-xl font-semibold">Avatar:</p>
+            <img src={avatarUrl} alt="Avatar" className="w-24 h-24 rounded-full mx-auto border-2 border-indigo-500"/>
+          </div>
+          
+          {favoriteMovie && (
+            <div className="mb-4">
               <p className="text-xl font-semibold">Película favorita: {favoriteMovie.title} ({favoriteMovie.release_date})</p>
               <img src={`https://image.tmdb.org/t/p/w200/${favoriteMovie.poster_path}`} alt={`${favoriteMovie.title} poster`} className="w-24 mx-auto mt-2" />
             </div>
-            )}
-              </div>
-              <Watchedlist />
-              <Wishlist />
+          )}
+
+          <div className="mb-4">
+            <Watchedlist />
+          </div>
+
+          <div className="mb-4">
+            <Wishlist />
+          </div>
+          
           <div className="mt-8">
             <button onClick={() => setIsEditing(true)} className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Editar perfil</button>
           </div>
         </div>
       </div>
     </div>
-  ) : (
+  </div>
+)
+ : (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-6 sm:px-6 lg:px-8">
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
