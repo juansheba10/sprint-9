@@ -173,7 +173,11 @@ const MovieDetails = () => {
     <div className="max-w-full mx-auto p-4 sm:p-8">
   <Link to="/" className="inline-block mb-4 text-blue-500">Back to movies</Link>
   <div className="flex flex-col sm:flex-row mb-4">
-    <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} className="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 sm:mr-4" />
+  <img 
+  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} 
+  alt={movie.title} 
+  className="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 2xl:w-1/5 sm:mr-4" 
+/>
     <div>
       <h2 className="text-2xl font-semibold mb-2">{movie.title}</h2>
       <p className="text-sm text-gray-500 mb-2">{movie.release_date.split('-')[0]} • {movie.runtime} min</p>
@@ -204,22 +208,16 @@ const MovieDetails = () => {
       ) : (
         <div className="sm:flex sm:gap-4">
           <button 
-            className={`w-full sm:w-auto font-bold py-2 px-4 rounded ${isInWishlist ? "bg-blue-700" : "bg-blue-500 hover:bg-blue-700"} text-white mb-2 sm:mb-0`}
-            onClick={addToWishlist}
-          >
-            {isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
-          </button>
-          <button 
-            className={`w-full sm:w-auto font-bold py-2 px-4 rounded ${isInWatchedlist ? "bg-green-700" : "bg-green-500 hover:bg-green-700"} text-white`}
-            onClick={watchedWishlist}
-          >
-            {isInWatchedlist ? "Remove from watchedlist" : "Add to watchedlist"}
-          </button>
+  className={`w-40 lg:w-48 font-bold py-2 px-4 rounded ${isInWishlist ? "bg-blue-700" : "bg-blue-500 hover:bg-blue-700"} text-white mb-2 sm:mb-0`}
+  onClick={addToWishlist}
+>
+  {isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
+</button>
         </div>
       )}
       <div>
-        <h3 className="text-xl font-semibold mb-2">Cast:</h3>
-        <div className="flex flex-col sm:flex-row justify-between items-center">
+            <h3 className="text-xl font-semibold mb-2">Cast:</h3>
+            <div className="flex flex-row overflow-x-scroll sm:justify-between items-center">
           <button 
             onClick={prevActors} 
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 sm:mb-0"
