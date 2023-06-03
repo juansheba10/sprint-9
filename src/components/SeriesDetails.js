@@ -4,6 +4,7 @@ import axios from 'axios'
 import DefaultAvatar from "../components/Assets/3551739.jpg"
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { Puff } from 'react-loader-spinner';
 
 const SeriesDetails = () => {
   const { id } = useParams();
@@ -50,7 +51,9 @@ const SeriesDetails = () => {
 
 
   if (!series) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    return <div className="flex justify-center items-center h-screen">
+      <Puff color="#00BFFF" height={100} width={100} />
+    </div>
   }
 
   return (
