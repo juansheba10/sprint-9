@@ -8,6 +8,9 @@ import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import axios from 'axios';
 import Watchedlist from './WatchedList';
 import Wishlist from './WishList';
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+
 
 
 function CreateProfile() {
@@ -142,7 +145,7 @@ function CreateProfile() {
     e.preventDefault();
 
 
-    if (!username || !avatarUrl || !favoriteMovie) {
+    if (!username || !avatarUrl || !newFavoriteMovie) {
       alert('Por favor, completa todos los campos antes de enviar.');
       return;
     }
@@ -228,30 +231,36 @@ function CreateProfile() {
         </div>
       </div>
     </div>
-  ) :   profileCreated ? (
+  ) : profileCreated ? (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-6 sm:px-6 lg:px-8">
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="mt-8 sm:mx-auto sm:w-full lg:max-w-full">
         <div className="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
-          <h2 className="mb-2 text-center text-4xl font-extrabold text-gray-900">Tu perfil</h2>
-          <div className="mt-6 text-center">
-            <p className="text-2xl font-semibold">Nombre de usuario: {username}</p>
-            <div className="mt-4">
-              <p className="text-xl font-semibold">Avatar:</p>
-              <img src={avatarUrl} alt="Avatar" className="w-24 h-24 rounded-full mx-auto border-2 border-indigo-500"/>
+          <h2 className="mb-2 text-center text-4xl font-extrabold text-gray-900 lg:text-6xl">Tu perfil</h2>
+          <div className="mt-6 text-center lg:flex lg:flex-row lg:justify-around lg:items-center">
+            <div>
+              <p className="text-2xl font-semibold lg:text-4xl">Nombre de usuario: {username}</p>
+              <div className="mt-4">
+                <p className="text-xl font-semibold lg:text-3xl">Avatar:</p>
+                <img src={avatarUrl} alt="Avatar" className="w-24 h-24 rounded-full mx-auto border-2 border-indigo-500 lg:w-48 lg:h-48"/>
+              </div>
             </div>
             
             {favoriteMovie && (
-            <div className="mt-4">
-              <p className="text-xl font-semibold">Película favorita: {favoriteMovie.title} ({favoriteMovie.release_date})</p>
-              <img src={`https://image.tmdb.org/t/p/w200/${favoriteMovie.poster_path}`} alt={`${favoriteMovie.title} poster`} className="w-24 mx-auto mt-2" />
-            </div>
-            )}
+              <div className="mt-4 lg:mt-0">
+                <p className="text-xl font-semibold lg:text-3xl">Película favorita: {favoriteMovie.title} ({favoriteMovie.release_date})</p>
+                <img src={`https://image.tmdb.org/t/p/w200/${favoriteMovie.poster_path}`} alt={`${favoriteMovie.title} poster`} className="w-24 mx-auto mt-2 lg:w-48" />
               </div>
-              <Watchedlist />
-              <Wishlist />
-          <div className="mt-8">
-            <button onClick={() => setIsEditing(true)} className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Editar perfil</button>
+            )}
           </div>
+          <div className="mt-6">
+            <Watchedlist />
+            <Wishlist />
+          </div>
+          <div className="mt-8">
+  <div className="flex justify-center">
+    <button onClick={() => setIsEditing(true)} className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 lg:text-2xl lg:w-auto">Editar perfil</button>
+  </div>
+</div>
         </div>
       </div>
     </div>

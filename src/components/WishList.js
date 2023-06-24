@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { getAuth } from "firebase/auth";
+import { getAuth } from 'firebase/auth';
 import { db } from '../Firebase/script';
 import { collection, where, getDocs, query } from 'firebase/firestore';
+import DefaultAvatar from '../components/Assets/3551739.jpg';
 
 const Wishlist = () => {
   const auth = getAuth();
   const user = auth.currentUser;
   const [wishlistMovies, setWishlistMovies] = useState([]);
-  const [showThumbnails, setShowThumbnails] = useState(false);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [visibleMovies, setVisibleMovies] = useState([]);
+  const moviesToShow = 3; // Cambia este valor según cuántas películas quieres mostrar a la vez en el carrusel.
 
   useEffect(() => {
     const fetchWishlistMovies = async () => {
@@ -20,33 +23,65 @@ const Wishlist = () => {
         movies.push(doc.data());
       });
       setWishlistMovies(movies);
-    }
+    };
 
     fetchWishlistMovies();
   }, [user]);
 
+  useEffect(() => {
+    setVisibleMovies(wishlistMovies.slice(carouselIndex, carouselIndex + moviesToShow));
+  }, [carouselIndex, wishlistMovies]);
+
+  const nextMovies = () => {
+    setCarouselIndex((prevIndex) => Math.min(prevIndex + 1, wishlistMovies.length - moviesToShow));
+  };
+
+  const prevMovies = () => {
+    setCarouselIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+  };
+
   return (
-      <div>
-      <button
-        className="my-4 px-4 py-2 bg-gray-200 text-gray-800 rounded-md"
-        onClick={() => setShowThumbnails(!showThumbnails)}
-      >
-        {showThumbnails ? 'Ocultar Wishlist' : 'Mostrar Wishlist'}
-      </button>
-      {showThumbnails && wishlistMovies.map(movie => (
-        <div key={movie.movieId} className="flex gap-x-4">
-          <img 
-            className="h-12 w-12 flex-none rounded-full bg-gray-50" 
-            src={`https://image.tmdb.org/t/p/w500${movie.moviePoster}`} 
-            alt={movie.movieTitle} 
-          />
-          <div className="min-w-0 flex-auto">
-            <p className="text-sm font-semibold leading-6 text-gray-900">{movie.movieTitle}</p>
-            {/* asumimos que movie.movieDescription existe, si no, tendrías que cambiarlo por el campo correcto */}
-            <p className="mt-1 truncate text-xs leading-5 text-gray-500">{movie.movieDescription}</p>
-          </div>
+    <div className="text-center">
+      <h2 className="text-2xl font-semibold mb-4">Wishlist</h2>
+      <div className="flex justify-center items-center mt-4">
+        <button
+          onClick={prevMovies}
+          className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
+            carouselIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+          disabled={carouselIndex === 0}
+        >
+          Prev
+        </button>
+        <div className="flex space-x-4">
+          {visibleMovies.map((movie, index) => (
+            <div key={index} className="flex flex-col items-center space-y-2">
+              <div className="relative">
+                <img
+                  src={movie.moviePoster ? `https://image.tmdb.org/t/p/w500${movie.moviePoster}` : DefaultAvatar}
+                  alt={movie.movieTitle}
+                  className="lg:w-32 xl:w-48 rounded-3xl mr-4 shadow"
+                />
+              </div>
+              <div>
+                <div className="font-bold lg:text-xl xl:text-2xl mb-2 text-gray-900 border-b">
+                  {movie.movieTitle}
+                </div>
+                <p className="text-gray-700 leading-relaxed">{movie.movieDescription}</p>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+        <button
+          onClick={nextMovies}
+          className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4 ${
+            carouselIndex === wishlistMovies.length - moviesToShow ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+          disabled={carouselIndex === wishlistMovies.length - moviesToShow}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };
